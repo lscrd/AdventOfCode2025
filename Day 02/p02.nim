@@ -1,9 +1,12 @@
 import std/[strutils, strscans]
 
-type Digit = 0..9
+# Read ranges.
+var ranges: seq[Slice[int]]
+for rng in readFile("p02.data").split(','):
+  var first, last: int
+  if scanf(rng, "$i-$i", first, last):
+    ranges.add first..last
 
-let ranges = readFile("p02.data").split(',')
-var result = 0
 
 ### Part 1 ###
 
@@ -18,12 +21,12 @@ proc isInvalid1(id: int): bool =
     if s[i] != s[i + m]:
       return false
 
+var result = 0
 for rng in ranges:
-  var first, last: int
-  if scanf(rng, "$i-$i", first, last):
-    for id in first..last:
+    for id in rng:
       if id.isInvalid1:
         result += id
+
 echo "Part 1: ", result
 
 
@@ -49,9 +52,8 @@ proc isInvalid2(id: int): bool =
 
 result = 0
 for rng in ranges:
-  var first, last: int
-  if scanf(rng, "$i-$i", first, last):
-    for id in first..last:
-      if id.isInvalid2:
-        result += id
+  for id in rng:
+    if id.isInvalid2:
+      result += id
+
 echo "Part 2: ", result
